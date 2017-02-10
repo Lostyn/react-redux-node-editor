@@ -1,0 +1,47 @@
+.main-menu-bar {
+	background: #313638;
+	border-bottom: 1px solid #232628;
+	overflow: visible;
+	z-index: 999;
+	height: 26px;
+	width: 100%;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	line-height: 26px;
+	display: block;
+}
+
+	.main-menu-bar li {
+		display: list-item;
+		float: left;
+		color: #ccc;
+		text-align: center;
+		position: relative;
+		padding: 0;
+		text-decoration: none;
+		overflow: visible;
+	}
+	.main-menu-bar li:hover {
+		color: white;
+	}
+
+	.sub-menu li{
+		display: block;
+		float: none;
+		text-align: left;
+		cursor: pointer;
+	}
+
+	.sub-menu {
+		display: none;
+		position: absolute;
+		margin: 0;
+		padding: 0 0 0 30px;
+		background-color: #333;
+		min-width: 160px;
+	}
+
+	.main-menu-bar li:hover > .sub-menu{
+		display: block;
+	}

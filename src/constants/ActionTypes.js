@@ -1,0 +1,7 @@
+export const SET_WORKING_FILE = 'SET_WORKING_FILE';
+export const ADD_NODE = 'ADD_NODE';
+export const DELETE_NODE = 'DELETE_NODE';
+export const ADD_CONNECTION = 'ADD_CONNECTION';
+export const CLEAN_CONNECTIONS = 'CLEAN_CONNECTIONS';
+export const MOVE_NODE = 'MOVE_NODE';
+export const CUT_CONNECTIONS = 'CUT_CONNECTIONS';

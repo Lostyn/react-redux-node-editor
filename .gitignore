@@ -1,0 +1,37 @@
+# PHPStorm configuration
+.idea
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# jscoverage/JSCover
+lib-cov
+
+# Coverage directory used by tools like istanbul
+coverage
+
+# http://gruntjs.com/creating-plugins#storing-task-files
+.grunt
+
+# node-waf configuration
+.lock-wscript
+
+# http://nodejs.org/api/addons.html
+build/Release
+
+node_modules
+
+# OSX
+.DS_Store
+
+# Package
+dist
+release
+main.js
+main.js.map

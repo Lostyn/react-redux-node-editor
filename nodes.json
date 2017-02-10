@@ -1,0 +1,1 @@
+{"nodes":[{"type":"text","name":"Texte","fields":{"in":[{"name":"from"}],"out":[{"name":"to"}]},"x":216,"y":149,"nid":1},{"type":"choice","name":"Choix","fields":{"in":[{"name":"from"}],"out":[{"name":"1"}]},"x":534,"y":291,"nid":2}],"connections":[{"from":"to","from_node":1,"to":"from","to_node":2}]}
