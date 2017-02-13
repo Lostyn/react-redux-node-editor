@@ -33,5 +33,3 @@ node_modules
 # Package
 dist
 release
-main.js
-main.js.map
