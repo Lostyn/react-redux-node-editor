@@ -5,3 +5,4 @@ export const ADD_CONNECTION = 'ADD_CONNECTION';
 export const CLEAN_CONNECTIONS = 'CLEAN_CONNECTIONS';
 export const MOVE_NODE = 'MOVE_NODE';
 export const CUT_CONNECTIONS = 'CUT_CONNECTIONS';
+export const UPDATE_NODE = 'UPDATE_NODE';

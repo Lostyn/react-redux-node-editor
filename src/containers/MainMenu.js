@@ -1,3 +1,5 @@
+import '../styles/mainmenu.css';
+
 import React from 'react';
 import {remote} from 'electron';
 import storage from '../utils/storage';
@@ -46,10 +48,17 @@ export default class MainMenu extends React.Component {
 
 	render() {
 		return (
-			<ul>
-				<li onTouchTap={this.newFileHandler}>New file</li>
-				<li onTouchTap={this.openFileHandler}>Load file</li>
-			</ul>
+			<div className="mainmenu">
+				<div className="mainmenu_body">
+					<div className="mainmenu_logo"/>
+					<div className="mainmenu_baseline"><span>Kaeps</span> dialog node base editor</div>
+					<div className="mainmenu_option">
+						<div onClick={this.newFileHandler}>New file</div>
+						<div onClick={this.openFileHandler}>Load file</div>
+					</div>
+				</div>
+			</div>
+			
 		);
 	}
 }

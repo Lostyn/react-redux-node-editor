@@ -20,7 +20,7 @@ export default function some(state = initialState, action) {
 			let a = state.nodes;
 			let nextId = 1;
 			a.map( o => nextId = Math.max(nextId, o.nid + 1));
-
+ 
 			return Object.assign({}, state, {
 				nodes: [
 					...a,
@@ -61,6 +61,13 @@ export default function some(state = initialState, action) {
 		case types.CUT_CONNECTIONS:
 			return Object.assign({}, state, {
 				connections: state.connections.filter( (c) => action.aConn.indexOf(c) == -1)
+			})
+
+		case types.UPDATE_NODE:
+			return Object.assign({}, state, {
+				nodes: state.nodes.map( (n) => 
+					n.nid == action.nid ? Object.assign({}, n, action.update) : n
+				)
 			})
 
 		default:

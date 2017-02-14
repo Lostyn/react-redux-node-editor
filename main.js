@@ -1,8 +1,28 @@
 const {app, BrowserWindow} = require('electron')
+const installExtension = require('electron-devtools-installer').default
+const {REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS} = require('electron-devtools-installer')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
+
+function initExtension(){
+  if(process.env.ENV == "development"){
+    installExtension(REDUX_DEVTOOLS)
+    .then((name) => {
+      console.log(`Added Extension:  ${name}`);
+      installExtension(REACT_DEVELOPER_TOOLS)
+        .then((name) => {
+          console.log(`Added Extension:  ${name}`);
+          createWindow();
+        })
+        .catch((err) => console.log('An error occurred: ', err));
+    })
+    .catch((err) => console.log('An error occurred: ', err));
+  } else {
+    createWindow();
+  }
+}
 
 function createWindow () {
   // Create the browser window.
@@ -26,7 +46,7 @@ function createWindow () {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+app.on('ready', initExtension)
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
@@ -41,7 +61,7 @@ app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (win === null) {
-    createWindow()
+    initExtension()
   }
 })
 

@@ -28,6 +28,10 @@ var config = {
 	        test: /\.css$/,
 	        loaders: ['style', 'css', 'postcss'],
 	        include: __dirname
+	      }, {
+	        test: /\.(ico|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)(\?.*)?$/,
+	        loader: 'file',
+	        include: __dirname
 	      }
       ]
 	},

@@ -6,6 +6,7 @@ import Node from '../components/Node';
 import EditorView from '../components/EditorView';
 import Menu from '../components/Menu';
 import ListBar from '../components/ListBar';
+import NodeEdition from '../components/NodeEdition';
 
 import {arraySetUniqueElem} from '../utils'
 import {computeIntersections} from '../utils/lineUtils'
@@ -27,8 +28,6 @@ export default class Editor extends React.Component {
 		super(props);
 
 		this.state = {
-			//nodes: file.nodes,
-			//connections: file.connections,
 			mouseX: 0,
 			mouseY: 0,
 			cut: {
@@ -36,10 +35,10 @@ export default class Editor extends React.Component {
 				startX: 0,
 				startY: 0
 			},
-			selected: -1
+			selected: -1,
+			edit: -1
 		}
 
-		this.nextId = 0;
 		this.cuts = [];
 		
 		this.throttledMouseMove = throttle( this.throttledMouseMove.bind(this), 10);
@@ -133,11 +132,11 @@ export default class Editor extends React.Component {
 			
 			let o = {
 				pt:{
-					x : node.x + (isSideIn() ? 4 : 86),
+					x : node.x + (isSideIn() ? 0 : 150),
 					y : node.y + 24 + (index * 13),
 				},
 				ctrl:{
-					x : node.x + (isSideIn() ? -46 : 136),
+					x : node.x + (isSideIn() ? -50 : 210),
 					y : node.y + 24 + (index * 13),
 				}
 			}
@@ -151,7 +150,7 @@ export default class Editor extends React.Component {
 					y : this.state.mouseY,
 				},
 				ctrl:{
-					x : this.state.mouseX + (isSideIn() ? -46 : 136),
+					x : this.state.mouseX + (isSideIn() ? -50 : 50),
 					y : this.state.mouseY,
 				}
 		}
@@ -223,6 +222,12 @@ export default class Editor extends React.Component {
 	}
 
 	onUpHandler(e){
+		if(e.target.className.baseVal == "graph"){
+			this.setState({
+				selected: -1
+			})
+		}
+
 		if (this.state.cut.enable)
 			this.processCut();
 
@@ -281,29 +286,40 @@ export default class Editor extends React.Component {
 			})
 	}
 
+	editHandler = (nid) => {
+		this.setState({
+			edit:nid
+		})
+	}
+
+	onCloseEditionHandler = () => {
+		this.setState({
+			edit:-1
+		})
+	}
+
 	drawNodes(){
 		return this.props.nodes.map( (item, index) => {
-			this.nextId = Math.max(item.nid + 1, this.nextId);
-			
 			return <Node 
-						key={index} {...item} 
+						key={`node_${item.nid}`} {...item} 
 						onMoved={this.nodeMoved}
 						onStartConnection={this.startConnection}
 						onCloseConnection={this.onCloseConnection}
 						onClick={this.selectNode}
+						editHandler={this.editHandler}
 						selected={this.state.selected == item.nid}/>
 		});
 	}
 
 	drawGraph() {
 		return (
-			<svg height="4000" width="4000" version="1.1">
+			<svg className="graph" height="4000" width="4000" version="1.1">
 			{
 				this.props.connections.map( (item, index) => {
 					const from = this.getPos(item.from_node, item.from, "out");
 					const to = this.getPos(item.to_node, item.to, "in");
 					
-					return <path key={index} fill="none" stroke="#555" 
+					return <path key={index} fill="none" stroke={this.cuts.indexOf(item) == -1 ? "#555" : "#F00"}
 						d={`M${from.pt.x},${from.pt.y} C${from.ctrl.x},${from.ctrl.y} ${to.ctrl.x},${to.ctrl.y} ${to.pt.x},${to.pt.y}`} 
 					/>			
 				})
@@ -316,10 +332,16 @@ export default class Editor extends React.Component {
 	}
 
 	render() {
+		const nodeEdit = this.props.nodes.find( o => o.nid == this.state.edit);
+
 		return (
 			<div onMouseUp={this.onUpHandler} onMouseDown={this.onDownhandler}>
 				<ListBar onAddNode={this.onAddNode}/>
 				<EditorView onMouseMove={this.mouseMove}>
+					<div className="help">
+						<p>Alt + drag : Start cut line</p>
+						<p>Select to edit node</p>
+					</div>
 					<div className="graph" ref={ref => this.graph = ref}>
 						{this.drawGraph()}
 					</div>
@@ -327,6 +349,11 @@ export default class Editor extends React.Component {
 						{this.drawNodes()}
 					</div>
 				</EditorView>
+				<NodeEdition 
+					node={nodeEdit}
+					onCloseHandler={this.onCloseEditionHandler}
+					updateAction={this.props.actions.updateNode}
+				/>
 				<Menu backToMenu={this.props.backToMenu}
 					save={this.save}/>
 			</div>

@@ -9,7 +9,9 @@ const Config = {
 			out: [{
 				name: "to"
 			}]
-		}
+		},
+		value: "",
+		adds:{}
 	}, {
 		type: "choice",
 		name: "Choix",
@@ -20,7 +22,9 @@ const Config = {
 			out: [{
 				name: "1"
 			}]
-		}
+		},
+		value: "",
+		adds:{}
 	}]
 }
 

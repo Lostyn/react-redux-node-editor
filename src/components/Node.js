@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import isEqual from 'lodash/isEqual';
+import {Edit} from '../utils/icons';
 
 export default class Node extends React.Component {
 	static propTypes = {
@@ -143,15 +144,23 @@ export default class Node extends React.Component {
 				style={styles.node}
 				ref={ ref => this._elem = ref}
 			>
-				<div className="head" onMouseDown={::this.onMouseDownHandler}>{this.props.name}</div>
-				<div className="options">
-					<div className="inputs">
-						{this.getInputs()}
+				<div className="node_body">
+					<div className="head" onMouseDown={::this.onMouseDownHandler}>{this.props.name}</div>
+					<div className="options">
+						<div className="inputs">
+							{this.getInputs()}
+						</div>
+						<div className="center">
+							{this.props.value}
+						</div>
+						<div className="outputs">
+							{this.getOutputs()}
+						</div>
 					</div>
-					<div className="center"></div>
-					<div className="outputs">
-						{this.getOutputs()}
-					</div>
+				</div>
+				<div className="node_options">
+					<Edit onClick={ () => this.props.editHandler(this.props.nid)}/>
+					<p>Edit</p>
 				</div>
 			</div>
 		);

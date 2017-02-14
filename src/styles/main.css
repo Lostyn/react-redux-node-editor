@@ -71,21 +71,57 @@ p {
     left: 150px;
 }
 
+.help {
+	position: fixed;
+	background-color: rgba(0,0,0,0.3);
+	padding: 10px;
+	border-radius: 5px;
+	top: 35px;
+	right: 25px;
+}
+
 .node {
 	color: #aaa;
 	font-size: 10px;
 	position: absolute !important;
-	overflow: hidden;
-	border-radius: 4px;
-	box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.2);
-	padding: 4px;
 	min-width: 80px;
-	background: #1f2324;
-	border: 1px solid transparent;
 	user-select: none;
 }
-	.node.active {
+	.node_body {
+		overflow: hidden;
+		border-radius: 4px;
+		box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.2);
+		padding: 4px;
+		background: #1f2324;
+		border: 1px solid transparent;
+		min-width: 80px;
+	}
+
+	.node.active .node_body{
 		border: 1px solid cyan;
+	}
+
+	.node_options {
+		cursor: pointer;
+		position: absolute;
+		opacity: 0;
+		top: 0px;
+		transition: all .3s linear;
+		display: flex;
+    	align-items: center;
+    	font-size: 1.2em;
+	}
+		.edit {
+			fill: #1f2324;
+			margin-right: 10px;
+		}
+		.edit:hover {
+			fill: cyan;
+		}
+
+	.node.active .node_options{
+		opacity: 1;
+		top: -30px;
 	}
 
 	.node .head {
@@ -100,12 +136,17 @@ p {
 	.node .center {
 		display: inline;
 		float: left;
+		white-space: pre-line;
 	}
 
 	.node .inputs,
 	.node .outputs {
 		color: #777;
-		width: 50%;
+	}
+	.node .center {
+		width: 80px;
+		min-height: 1px;
+		margin: 0 10px;
 	}
 
 	.node .inputs > div,

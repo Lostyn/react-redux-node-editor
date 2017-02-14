@@ -55,3 +55,11 @@ export function cutConnections(aConn){
 		aConn
 	}
 }
+
+export function updateNode(nid, update) {
+	return {
+		type: Types.UPDATE_NODE,
+		nid, 
+		update
+	}
+}
