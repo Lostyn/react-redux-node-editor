@@ -31,6 +31,8 @@ export default function some(state = initialState, action) {
 			});
 
 		case types.DELETE_NODE:
+			if (action.nid <= 1) return state;
+			
 			return Object.assign({}, state, {
 				nodes: state.nodes.filter( o => o.nid !== action.nid),
 				connections: state.connections.filter( o => o.from_node !== action.nid && o.to_node !== action.nid)

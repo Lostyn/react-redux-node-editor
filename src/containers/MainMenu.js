@@ -26,7 +26,19 @@ export default class MainMenu extends React.Component {
 	newFileHandler() {
 		this.props.startEdit({
 			"connections": [],
-			"nodes": []
+			"nodes": [{
+				nid: 1,
+				type: "start",
+				name: "Entry",
+				fields: {
+					in: [],
+					out: [{
+						name: "to"
+					}]
+				},
+				x: 200,
+				y: 200
+			}]
 		});
 	}
 

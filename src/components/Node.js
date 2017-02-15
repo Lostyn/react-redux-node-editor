@@ -158,10 +158,12 @@ export default class Node extends React.Component {
 						</div>
 					</div>
 				</div>
+				{ this.props.nid > 1 &&
 				<div className="node_options">
 					<Edit onClick={ () => this.props.editHandler(this.props.nid)}/>
 					<p>Edit</p>
 				</div>
+				}
 			</div>
 		);
 	}
