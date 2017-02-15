@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import isEqual from 'lodash/isEqual';
 import {Edit} from '../utils/icons';
+import * as nodes from './nodes';
 
 export default class Node extends React.Component {
 	static propTypes = {
@@ -36,9 +37,9 @@ export default class Node extends React.Component {
 	onPressFieldHandler(item, side, evt){
 		evt.stopPropagation();
 		let o = {
-            "from": side == "out" ? item.name : null,
+            "from": side == "out" ? item.id : null,
             "from_node": side == "out" ? this.props.nid : null,
-            "to": side == "in" ? item.name : null,
+            "to": side == "in" ? item.id : null,
             "to_node": side == "in" ? this.props.nid : null,
         };
 		this.props.onStartConnection(o);
@@ -57,7 +58,7 @@ export default class Node extends React.Component {
 					onMouseUp={this.onUpHandler.bind(this, item, "in")}
 				>
 					<span className="inner-field">
-					<span></span> {item.name}
+					<span id={item.id}></span> {item.name}
 					</span>
 				</div>
 			);
@@ -72,7 +73,7 @@ export default class Node extends React.Component {
 					onMouseUp={this.onUpHandler.bind(this, item, "out")}
 				>
 					<span className="inner-field">
-					{item.name} <span></span>
+					{item.name} <span id={item.id}></span>
 					</span>
 				</div>	
 			);
@@ -138,11 +139,13 @@ export default class Node extends React.Component {
 
 	render() {
 		const styles = this.getStyles();
+		
 		return (
 			<div 
-				className={`node${this.props.selected ? " active" : ""}`}
+				className={`node${this.props.selected ? " active" : ""} ${this.props.type}`}
 				style={styles.node}
 				ref={ ref => this._elem = ref}
+				id={this.props.id}
 			>
 				<div className="node_body">
 					<div className="head" onMouseDown={::this.onMouseDownHandler}>{this.props.name}</div>
@@ -150,9 +153,11 @@ export default class Node extends React.Component {
 						<div className="inputs">
 							{this.getInputs()}
 						</div>
-						<div className="center">
-							{this.props.value}
-						</div>
+						{
+							React.createElement(nodes[this.props.type], {
+								value:this.props.value
+							})
+						}
 						<div className="outputs">
 							{this.getOutputs()}
 						</div>

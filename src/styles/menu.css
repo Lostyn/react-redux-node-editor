@@ -42,6 +42,6 @@
 		min-width: 160px;
 	}
 
-	.main-menu-bar li:hover > .sub-menu{
+	.main-menu-bar.canOpen li:hover > .sub-menu{
 		display: block;
 	}

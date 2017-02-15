@@ -122,26 +122,31 @@ export default class Editor extends React.Component {
 		}
 	}
 
-	getPos(nodeId, field, side) {
+	getPos(nodeId, pId, side) {
 		const isSideIn = () => side == "in";
 
 		if (nodeId != null)
 		{
-			const node = this.getNode(nodeId);
-			let index = node.fields[side].indexOf(node.fields[side].find( (o) => o.name == field));
+			const e = document.querySelector(".editor-view");
+			const conn = document.querySelector(`#${pId}`);
 			
-			let o = {
-				pt:{
-					x : node.x + (isSideIn() ? 0 : 150),
-					y : node.y + 24 + (index * 13),
-				},
-				ctrl:{
-					x : node.x + (isSideIn() ? -50 : 210),
-					y : node.y + 24 + (index * 13),
-				}
-			}
+			if (conn != null)
+			{
+				const x = conn.getBoundingClientRect().left - e.offsetLeft;
+				const y = conn.getBoundingClientRect().top - e.offsetTop;
 
-			return o;
+				let o = {
+					pt:{
+						x, y
+					},
+					ctrl:{
+						x : x + (isSideIn() ? -50 : 50),
+						y,
+					}
+				}
+
+				return o;
+			}
 		}
 
 		return {
@@ -190,9 +195,9 @@ export default class Editor extends React.Component {
 		if (typeof conn != "undefined"){
 			if ((conn.from_node != nodeId && conn.to_node != nodeId)){
 				conn.from_node = conn.from_node || nodeId;
-				conn.from = conn.from || item.name;
+				conn.from = conn.from || item.id;
 				conn.to_node = conn.to_node || nodeId;
-				conn.to = conn.to || item.name;
+				conn.to = conn.to || item.id;
 				const {addConnection} = this.props.actions;
 				addConnection(conn);
 			}
@@ -301,7 +306,9 @@ export default class Editor extends React.Component {
 	drawNodes(){
 		return this.props.nodes.map( (item, index) => {
 			return <Node 
-						key={`node_${item.nid}`} {...item} 
+						{...item} 
+						key={`node_${item.nid}`}
+						id={`node_${item.nid}`}
 						onMoved={this.nodeMoved}
 						onStartConnection={this.startConnection}
 						onCloseConnection={this.onCloseConnection}

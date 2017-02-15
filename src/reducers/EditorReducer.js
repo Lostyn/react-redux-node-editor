@@ -1,11 +1,17 @@
 import * as types from '../constants/ActionTypes'
 import isEqual from 'lodash/isEqual';
+import randomUuid from 'random-uuid'
 
 const initialState = {
 	nodes: [],
 	connections: [],
 	path: undefined
 }
+
+const setId = (node) => {
+	node.fields.in.map( o => o.id = randomUuid({ prefix: 'r-' }) );
+	node.fields.out.map( o => o.id = randomUuid({ prefix: 'r-' }) );
+} 
 
 export default function some(state = initialState, action) {
 	switch (action.type) {
@@ -20,7 +26,8 @@ export default function some(state = initialState, action) {
 			let a = state.nodes;
 			let nextId = 1;
 			a.map( o => nextId = Math.max(nextId, o.nid + 1));
- 
+ 			setId(action.node);
+
 			return Object.assign({}, state, {
 				nodes: [
 					...a,

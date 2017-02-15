@@ -155,7 +155,6 @@ p {
 		width: 100%;
 		vertical-align: middle;
 		line-height: 10px;
-		height: 12px;
 	}
 
 	.node .outputs>div {
@@ -197,3 +196,17 @@ p {
 	overflow: hidden;
 	position: relative;
 }
+
+.start { width: 100px; }
+	.start .outputs{ width: 100%; }
+	.start .head{
+		color: cyan;
+	}
+
+.text { width: 180px; }
+	.text .inputs, .text .outputs { width: 18%; }
+	.text .center { width: 52%; }
+
+.choice { min-width: 110px; max-width: 240px; }
+	.choice .inputs{ width: 30%; }
+	.choice .outputs{ width: 70%; }

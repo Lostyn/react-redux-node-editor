@@ -1,4 +1,5 @@
 import React from 'react';
+import randomUuid from 'random-uuid'
 
 const getSubmit = (cancelHandler) => {
 	return (
@@ -113,6 +114,7 @@ class choice extends React.Component {
 			outs: [
 				...this.state.outs,
 				{
+					id: randomUuid({ prefix: 'r-' }),
 					name: "new entry"
 				}
 			]
@@ -128,7 +130,10 @@ class choice extends React.Component {
 	onChange = (index, e) => {
 		this.setState({
 			outs: this.state.outs.map( (o, i) => 
-				i == index ? {name: e.target.value} : o
+				i == index ? {
+					...o,
+					name: e.target.value
+				} : o
 			)
 		});
 	}

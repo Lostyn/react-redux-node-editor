@@ -6,6 +6,7 @@ import storage from '../utils/storage';
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import randomUuid from 'random-uuid'
 
 export default class MainMenu extends React.Component {
 	static propTypes = {
@@ -33,6 +34,7 @@ export default class MainMenu extends React.Component {
 				fields: {
 					in: [],
 					out: [{
+						id: randomUuid({ prefix: 'r-' }),
 						name: "to"
 					}]
 				},
