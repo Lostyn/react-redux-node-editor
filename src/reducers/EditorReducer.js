@@ -9,8 +9,12 @@ const initialState = {
 }
 
 const setId = (node) => {
-	node.fields.in.map( o => o.id = randomUuid({ prefix: 'r-' }) );
-	node.fields.out.map( o => o.id = randomUuid({ prefix: 'r-' }) );
+	node.fields.in.map( o => {
+		o.id = o.id || randomUuid({ prefix: 'r-' })
+	});
+	node.fields.out.map( o => {
+		o.id = o.id || randomUuid({ prefix: 'r-' }) 
+	});
 } 
 
 export default function some(state = initialState, action) {
