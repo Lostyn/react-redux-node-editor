@@ -7,6 +7,7 @@ import EditorView from '../components/EditorView';
 import Menu from '../components/Menu';
 import ListBar from '../components/ListBar';
 import NodeEdition from '../components/NodeEdition';
+import EventListener from 'react-event-listener';
 
 import {arraySetUniqueElem} from '../utils'
 import {computeIntersections} from '../utils/lineUtils'
@@ -16,14 +17,6 @@ import isEqual from 'lodash/isEqual';
 import storage from '../utils/storage';
 
 export default class Editor extends React.Component {
-	static propTypes = {
-		name: React.PropTypes.string,
-	};
-
-	static contextTypes = {
-		store: React.PropTypes.object
-	}
-
 	constructor(props, context) {
 		super(props);
 
@@ -43,22 +36,9 @@ export default class Editor extends React.Component {
 		
 		this.throttledMouseMove = throttle( this.throttledMouseMove.bind(this), 10);
 		this.nodeMoved = throttle(this.nodeMoved.bind(this), 20);
-		this.onAddNode = this.onAddNode.bind(this);
-		this.startConnection = this.startConnection.bind(this);
-		this.onCloseConnection = this.onCloseConnection.bind(this);
-		this.save = this.save.bind(this);
-		this.onUpHandler = this.onUpHandler.bind(this);
-		this.onDownhandler = this.onDownhandler.bind(this);
-		this.mouseMove = this.mouseMove.bind(this);
-
-		document.onkeydown = this.onKeyDownHandler.bind(this);
 	}
 
-	componentWillUnmount() {
-		document.onkeydown = undefined;
-	}
-
-	onKeyDownHandler(evt) {
+	onKeyDownHandler = (evt) => {
 		switch(evt.key){
 			case "Delete":
 				if (this.state.selected != -1){
@@ -132,8 +112,8 @@ export default class Editor extends React.Component {
 			
 			if (conn != null)
 			{
-				const x = conn.getBoundingClientRect().left - e.offsetLeft;
-				const y = conn.getBoundingClientRect().top - e.offsetTop;
+				const x = conn.getBoundingClientRect().left - e.offsetLeft + e.scrollLeft;
+				const y = conn.getBoundingClientRect().top - e.offsetTop + e.scrollTop;
 
 				let o = {
 					pt:{
@@ -183,26 +163,30 @@ export default class Editor extends React.Component {
 		});
 	}
 
-	startConnection(conn){
+	startConnection = (conn) => {
 		const {addConnection} = this.props.actions;
 		addConnection(conn);
 	}
 
-	onCloseConnection(item, side, nodeId){
+	onCloseConnection = (item, side, nodeId) => {
 		let conn = this.props.connections.find( (o) => o.from == null | o.to == null);
 		this.cleanConnection();
 
 		if (typeof conn != "undefined"){
 			if ((conn.from_node != nodeId && conn.to_node != nodeId)){
-				conn.from_node = conn.from_node || nodeId;
-				conn.from = conn.from || item.id;
-				conn.to_node = conn.to_node || nodeId;
-				conn.to = conn.to || item.id;
+				if (side == "in") {
+					conn.to_node = nodeId;
+					conn.to = item.id;
+				} else {
+					conn.from_node = nodeId;
+					conn.from = item.id;
+				}
+				
 				const {addConnection} = this.props.actions;
 				addConnection(conn);
 			}
 		}
-	}
+	};
 
 	throttledMouseMove(e){
 		const pos = this.getMousePosInView(e);
@@ -221,12 +205,12 @@ export default class Editor extends React.Component {
 		}
 	}
 
-	mouseMove(evt){
+	mouseMove = (evt) => {
 		evt.persist();
 		this.throttledMouseMove(evt);
 	}
 
-	onUpHandler(e){
+	onUpHandler = (e) => {
 		if(e.target.className.baseVal == "graph"){
 			this.setState({
 				selected: -1
@@ -237,7 +221,7 @@ export default class Editor extends React.Component {
 			this.processCut();
 
 		this.cleanConnection();
-	}
+	};
 
 	processCut(){
 		if(this.cuts.length > 0)
@@ -249,7 +233,7 @@ export default class Editor extends React.Component {
 		}
 	}
 
-	onDownhandler(evt){
+	onDownhandler = (evt) => {
 		evt.stopPropagation();
 
 		if(evt.altKey){
@@ -262,18 +246,18 @@ export default class Editor extends React.Component {
 				}
 			})
 		}
-	}
+	};
 
-	onAddNode(node, e){
+	onAddNode = (node, e) => {
 		const pos = this.getMousePosInView(e);
 		if (pos.x > 0 && pos.y > 0)
 		{
 			const {addNode} = this.props.actions;
 			addNode(node, pos.x, pos.y);
 		}
-	}
+	};
 
-	save(){
+	save = () => {
 		let path = this.props.path;
 		if (typeof path == "undefined")
 			path = remote.dialog.showSaveDialog({properties: ['SaveFile']});
@@ -289,19 +273,19 @@ export default class Editor extends React.Component {
 			.catch( err => {
 				console.log("save file error", err);
 			})
-	}
+	};
 
 	editHandler = (nid) => {
 		this.setState({
 			edit:nid
 		})
-	}
+	};
 
 	onCloseEditionHandler = () => {
 		this.setState({
 			edit:-1
 		})
-	}
+	};
 
 	drawNodes(){
 		return this.props.nodes.map( (item, index) => {
@@ -345,6 +329,12 @@ export default class Editor extends React.Component {
 			<div onMouseUp={this.onUpHandler} onMouseDown={this.onDownhandler}>
 				<ListBar onAddNode={this.onAddNode}/>
 				<EditorView onMouseMove={this.mouseMove}>
+					{ typeof nodeEdit == "undefined" && 
+						<EventListener
+							target="document"
+							onkeydown={this.onKeyDownHandler}
+						/>
+					}
 					<div className="help">
 						<p>Alt + drag : Start cut line</p>
 						<p>Select to edit node</p>
@@ -361,8 +351,10 @@ export default class Editor extends React.Component {
 					onCloseHandler={this.onCloseEditionHandler}
 					updateAction={this.props.actions.updateNode}
 				/>
-				<Menu backToMenu={this.props.backToMenu}
-					save={this.save}/>
+				<Menu 
+					backToMenu={this.props.backToMenu}
+					save={this.save}
+					export={this.props.export}/>
 			</div>
 		);
 	}

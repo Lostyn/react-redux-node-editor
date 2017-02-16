@@ -9,15 +9,9 @@ import MainMenu from '../containers/MainMenu'
 import Editor from '../containers/Editor'
 
 class App extends React.Component { 
-	static propTypes = {
-		name: React.PropTypes.string,
-	};
 
 	constructor(props) {
 		super(props);
-
-		this.startEdit = this.startEdit.bind(this);
-		this.backToMenu = this.backToMenu.bind(this);
 	}
 
 	getRoutes(){
@@ -27,6 +21,7 @@ class App extends React.Component {
 			}},
 			{ src: "/editor", container: Editor, props: {
 				backToMenu: this.backToMenu,
+				export: this.export,
 				nodes: this.props.editor.nodes,
 				connections: this.props.editor.connections,
 				path: this.props.editor.path,
@@ -35,20 +30,24 @@ class App extends React.Component {
 		];
 	}
 
-	startEdit(datas, path = undefined){
+	startEdit = (datas, path = undefined) => {
 		const {setWorkingFile} = this.props.editorActions;
 		const {push} = this.props.routingActions;
 		
 		setWorkingFile(datas, path);
 		push("/editor");
-	}
+	};
 
-	backToMenu(){
+	backToMenu = () => {
 		const {setWorkingFile} = this.props.editorActions;
 		const {push} = this.props.routingActions;
 
 		setWorkingFile(undefined, undefined);
 		push("");
+	};
+
+	export = () => {
+		console.log("[App] export");
 	}
 
 	render() {

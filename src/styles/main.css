@@ -97,6 +97,10 @@ p {
 		min-width: 80px;
 	}
 
+	.options {
+		margin-top: 5px;
+	}
+
 	.node.active .node_body{
 		border: 1px solid cyan;
 	}
@@ -110,6 +114,7 @@ p {
 		display: flex;
     	align-items: center;
     	font-size: 1.2em;
+    	pointer-events: none;
 	}
 		.edit {
 			fill: #1f2324;
@@ -122,6 +127,7 @@ p {
 	.node.active .node_options{
 		opacity: 1;
 		top: -30px;
+		pointer-events: auto;
 	}
 
 	.node .head {

@@ -54,9 +54,14 @@ export default function some(state = initialState, action) {
 			})
 
 		case types.ADD_CONNECTION:
+			var a = [];
+			if (action.conn.from != null && action.conn.to != null)
+				a = state.connections.filter( o => o.from != action.conn.from)
+			else a = state.connections;
+
 			return Object.assign({}, state, {
 				connections: [
-					...state.connections,
+					...a,
 					action.conn
 				]
 			})
