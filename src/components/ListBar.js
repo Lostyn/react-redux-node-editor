@@ -46,8 +46,8 @@ export default class ListBar extends React.Component {
 	mouseUpHandler(e) {
 		document.removeEventListener('mouseup', this.mouseUpHandler);
 		document.removeEventListener('mousemove', this.onMoveHandler);
-
-		let node = Config.nodes.find( o => o.type == this.state.rel.type);
+		
+		const node = Config.nodes.find( o => o.type == this.state.rel.type)
 		this.props.onAddNode(node, e);
 
 		this.setState({

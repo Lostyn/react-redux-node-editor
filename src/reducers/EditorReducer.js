@@ -8,15 +8,6 @@ const initialState = {
 	path: undefined
 }
 
-const setId = (node) => {
-	node.fields.in.map( o => {
-		o.id = o.id || randomUuid({ prefix: 'r-' })
-	});
-	node.fields.out.map( o => {
-		o.id = o.id || randomUuid({ prefix: 'r-' }) 
-	});
-} 
-
 export default function some(state = initialState, action) {
 	switch (action.type) {
 		case types.SET_WORKING_FILE:
@@ -30,13 +21,26 @@ export default function some(state = initialState, action) {
 			let a = state.nodes;
 			let nextId = 1;
 			a.map( o => nextId = Math.max(nextId, o.nid + 1));
- 			setId(action.node);
-
+			
 			return Object.assign({}, state, {
 				nodes: [
 					...a,
-					Object.assign({}, action.node, {
-						nid:nextId
+					 Object.assign({}, action.node, {
+						nid:nextId,
+						fields:{
+							in: action.node.fields.in.map( o => {
+								return {
+									...o,
+									id:randomUuid({ prefix: 'r-' })
+								}
+							}),
+							out:action.node.fields.out.map( o => {
+								return {
+									...o,
+									id:randomUuid({ prefix: 'r-' })
+								}
+							}),
+						}
 					})
 				]
 			});
