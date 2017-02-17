@@ -1,4 +1,4 @@
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, Menu} = require('electron')
 const installExtension = require('electron-devtools-installer').default
 const {REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS} = require('electron-devtools-installer')
 
@@ -25,6 +25,8 @@ function initExtension(){
 }
 
 function createWindow () {
+  Menu.setApplicationMenu(null);
+
   // Create the browser window.
   win = new BrowserWindow({width: 800, height: 600})
 

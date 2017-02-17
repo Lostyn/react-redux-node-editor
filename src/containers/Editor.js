@@ -8,9 +8,10 @@ import Menu from '../components/Menu';
 import ListBar from '../components/ListBar';
 import NodeEdition from '../components/NodeEdition';
 import EventListener from 'react-event-listener';
+import Connection from '../components/Connection';
 
 import {arraySetUniqueElem} from '../utils'
-import {computeIntersections} from '../utils/lineUtils'
+import {getCuts} from '../utils/lineUtils'
 
 import throttle from 'lodash/throttle';
 import isEqual from 'lodash/isEqual';
@@ -76,21 +77,19 @@ export default class Editor extends React.Component {
 			this.props.connections.map( (item, index) => {
 				const from = this.getPos(item.from_node, item.from, "out");
 				const to = this.getPos(item.to_node, item.to, "in");
-				let px = [from.pt.x, from.ctrl.x, to.ctrl.x, to.pt.x];
-				let py = [from.pt.y, from.ctrl.y, to.ctrl.y, to.pt.y];
+				const inter = getCuts(from, to, lx, ly);
 
-				const inter = computeIntersections(px, py, lx, ly);
-				if (inter != null){
+				if (inter.length > 0){
 					this.cuts = arraySetUniqueElem(this.cuts, item);
-					items.push(
+					items.push(inter.map( (o, index) => 
 						<circle 
 							key={`cut_${index}`}
 							r="5"
-							cx={inter[0]}
-							cy={inter[1]}
-							fill="red"
+							cx={o.x}
+							cy={o.y}
+							fill={`rgba(255, 0, 0, ${1-index/inter.length})`}
 						/>
-					);
+					));
 				} else{
 					const index = this.cuts.indexOf(item);
 					if (index != -1)
@@ -260,7 +259,9 @@ export default class Editor extends React.Component {
 	save = () => {
 		let path = this.props.path;
 		if (typeof path == "undefined")
-			path = remote.dialog.showSaveDialog({properties: ['SaveFile']});
+			path = remote.dialog.showSaveDialog({properties: ['SaveFile'], filters: [
+		    	{name: 'Json', extensions: ['json']}
+			]});
 
 		const datas = {
 			nodes:this.props.nodes,
@@ -309,10 +310,9 @@ export default class Editor extends React.Component {
 				this.props.connections.map( (item, index) => {
 					const from = this.getPos(item.from_node, item.from, "out");
 					const to = this.getPos(item.to_node, item.to, "in");
-					
-					return <path key={index} fill="none" stroke={this.cuts.indexOf(item) == -1 ? "#555" : "#F00"}
-						d={`M${from.pt.x},${from.pt.y} C${from.ctrl.x},${from.ctrl.y} ${to.ctrl.x},${to.ctrl.y} ${to.pt.x},${to.pt.y}`} 
-					/>			
+					const color= this.cuts.indexOf(item) == -1 ? "#555" : "#F00";
+
+					return <Connection key={index} from={from} to={to} color={color}/>		
 				})
 			}
 			{

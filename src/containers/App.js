@@ -8,6 +8,8 @@ import * as EditorActionCreators from '../actions/EditorActionCreators'
 import MainMenu from '../containers/MainMenu'
 import Editor from '../containers/Editor'
 
+import {exportFile} from '../core/Exporter';
+
 class App extends React.Component { 
 
 	constructor(props) {
@@ -47,7 +49,7 @@ class App extends React.Component {
 	};
 
 	export = () => {
-		console.log("[App] export");
+		exportFile(this.props.editor);
 	}
 
 	render() {

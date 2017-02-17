@@ -12,14 +12,14 @@ import App from './containers/App'
 
 injectTapEventPlugin();
 
-//const store = configureStore({});
+const store = configureStore({});
 
-const state = JSON.parse(localStorage.getItem('state'));
+/*const state = JSON.parse(localStorage.getItem('state'));
 const store = configureStore(state || {});
 const saveState = throttle( () => {
 	localStorage.setItem('state', JSON.stringify(store.getState()));
 }, 1000);
-store.subscribe(saveState);
+store.subscribe(saveState);*/
 
 render(
 	<Provider store={store}>

@@ -1,0 +1,1 @@
+{"nodes":[{"id":1,"type":"start","next":3},{"id":3,"type":"choice","values":[{"label":"Dire oui","to":4},{"label":"Dire non","to":5}],"align":"left","img":"img/player.png"},{"id":4,"type":"text","values":"Oui monsieur","next":0},{"id":5,"type":"text","values":"Non monsieur !","next":0}]}
