@@ -7,21 +7,21 @@ const {REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS} = require('electron-devtools-insta
 let win
 
 function initExtension(){
-  if(process.env.ENV == "development"){
-    installExtension(REDUX_DEVTOOLS)
-    .then((name) => {
-      console.log(`Added Extension:  ${name}`);
-      installExtension(REACT_DEVELOPER_TOOLS)
-        .then((name) => {
-          console.log(`Added Extension:  ${name}`);
-          createWindow();
-        })
-        .catch((err) => console.log('An error occurred: ', err));
-    })
-    .catch((err) => console.log('An error occurred: ', err));
-  } else {
+  // if(process.env.ENV == "development"){
+  //   installExtension(REDUX_DEVTOOLS)
+  //   .then((name) => {
+  //     console.log(`Added Extension:  ${name}`);
+  //     installExtension(REACT_DEVELOPER_TOOLS)
+  //       .then((name) => {
+  //         console.log(`Added Extension:  ${name}`);
+  //         createWindow();
+  //       })
+  //       .catch((err) => console.log('An error occurred: ', err));
+  //   })
+  //   .catch((err) => console.log('An error occurred: ', err));
+  // } else {
     createWindow();
-  }
+  // }
 }
 
 function createWindow () {
